@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien\Game">
+      <UniqueIdentifier>{9c389c51-61ee-42ab-af4b-30a393a0ffef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game">
+      <UniqueIdentifier>{8c34901e-c0e2-4e09-a901-475af55b6ace}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Game\World">
+      <UniqueIdentifier>{126def03-2fb5-4b3f-bc64-17ea50593c0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\World">
+      <UniqueIdentifier>{b0eb2c6c-4be0-4f97-a13d-992138a130ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Game\World\Tile">
+      <UniqueIdentifier>{0c745ba5-f185-4cf1-99df-73b8b4df305c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\World\Tile">
+      <UniqueIdentifier>{0af19b30-3dfb-4dc5-bf83-5e1903156710}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="code\Game\Game.cpp">
+      <Filter>Quelldateien\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="code\main.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Game\World\World.cpp">
+      <Filter>Quelldateien\Game\World</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Game\World\Tile\Tile.cpp">
+      <Filter>Quelldateien\Game\World\Tile</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="code\Game\Game.h">
+      <Filter>Headerdateien\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Game\World\World.h">
+      <Filter>Headerdateien\Game\World</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Game\Definitions.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Game\World\Tile\Tile.h">
+      <Filter>Headerdateien\Game\World\Tile</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

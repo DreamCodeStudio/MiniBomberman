@@ -1,0 +1,4 @@
+﻿  main.cpp
+Game.obj : error LNK2019: Verweis auf nicht aufgelöstes externes Symbol "__imp__createDevice" in Funktion ""public: __thiscall Game::Game(void)" (??0Game@@QAE@XZ)".
+C:\Users\Michael\Desktop\Bomberman\Bomberman\\code\Engine\Irrlicht\lib\Win64-visualstudio\Irrlicht.lib : warning LNK4272: Bibliothekcomputertyp "x64" steht in Konflikt mit dem Zielcomputertyp "x86"
+C:\Users\Michael\Desktop\Bomberman\Debug\Bomberman.exe : fatal error LNK1120: 1 nicht aufgelöste Externe
