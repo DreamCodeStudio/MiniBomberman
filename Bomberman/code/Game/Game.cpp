@@ -12,13 +12,10 @@ Game::Game()
 
 	//Create first person camera. The player can controll the camera via the LeapMotion controller
 	//Because this is kind of an ego-shooter we use a first person camera here. 
-	_camera = _manager->addCameraSceneNodeFPS();
+	_camera = _manager->addCameraSceneNodeFPS(0, 100, 0.05);
 
 	//Set start values
 	_currentGameState = GAME_STATE::RUN;
-
-	//For testing create a simple cube here
-	irr::scene::ILightSceneNode *light = _manager->addLightSceneNode(0, irr::core::vector3df(0, 80, 0));
 
 	//Create Game Elements here
 	_gameWorld = World(_manager);

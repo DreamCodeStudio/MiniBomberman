@@ -18,7 +18,7 @@ void Tile::SetTileState(GAME_TILE_STATE tileState)
 	{
 		case GAME_TILE_STATE::BLOCKED: {
 
-			_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\TileBlocked.obj")); //Load model
+			_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\Tile\\Tile.obj")); //Load model
 			_tileModel->setPosition(_tilePosition);	//Set position
 		}
 			break;
