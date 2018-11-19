@@ -5,7 +5,8 @@
 #include <irrlicht.h>
 
 //Game Elements
-#include "World/World.h"
+#include "World/World.h"	//World class which creates the game field and the tiles
+#include "Player/Player.h"  //Player class which handles all the input from the user
 
 //Defintions for game states, tile states
 #include "Definitions.h"
@@ -44,4 +45,5 @@ class Game
 
 		//Game elements
 		World _gameWorld;
+		Player _player1, _player2;
 };

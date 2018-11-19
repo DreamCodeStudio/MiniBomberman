@@ -8,6 +8,9 @@ void Tile::Create(irr::scene::ISceneManager *manager, irr::core::vector3df tileP
 	//Set the position of the tile
 	_tilePosition = tilePosition;
 
+	//Save tile state
+	_currentGameTileState = tileState;
+
 	//Load the model according to the TileState
 	this->SetTileState(tileState);
 }
@@ -20,7 +23,20 @@ void Tile::SetTileState(GAME_TILE_STATE tileState)
 
 			_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\Tile\\Tile.obj")); //Load model
 			_tileModel->setPosition(_tilePosition);	//Set position
+			_currentGameTileState = tileState;		//Save updated tile state
+		}
+			break;
+		case GAME_TILE_STATE::EMPTY: {
+
+			_tileModel->remove();
+			_currentGameTileState = tileState;
+
 		}
 			break;
 	}
+}
+
+GAME_TILE_STATE Tile::GetTileState()
+{
+	return _currentGameTileState;
 }

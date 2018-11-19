@@ -27,6 +27,8 @@ class World
 		///<summary>The update method handles all interactions between the player and world objects</summary>
 		void Update();
 
+		Tile **GetGameMatrix();
+
 	private:
 
 		//3D-Models

@@ -23,6 +23,7 @@ class Tile
 
 		///<summary>Sets the state of a tile an automatically changes it's 3D-Model</summary>
 		void SetTileState(GAME_TILE_STATE tileState);
+		GAME_TILE_STATE GetTileState();
 
 	private:
 
@@ -33,5 +34,7 @@ class Tile
 		//The current tile model
 		irr::scene::IAnimatedMeshSceneNode *_tileModel;
 		irr::core::vector3df _tilePosition;
+		GAME_TILE_STATE _currentGameTileState;
+		
 		int test;
 };

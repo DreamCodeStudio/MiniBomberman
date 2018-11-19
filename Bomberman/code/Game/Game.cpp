@@ -12,13 +12,21 @@ Game::Game()
 
 	//Create first person camera. The player can controll the camera via the LeapMotion controller
 	//Because this is kind of an ego-shooter we use a first person camera here. 
-	_camera = _manager->addCameraSceneNodeFPS(0, 100, 0.05);
+	//_camera = _manager->addCameraSceneNodeFPS(0, 100, 0.05f);
+	_camera = _manager->addCameraSceneNode(0, irr::core::vector3df(9, 17, -10));
+	irr::scene::ISceneNodeAnimator* animator = _manager->createFlyCircleAnimator(irr::core::vector3df(0, 14, 0), 12, 0.0001f);
+	_camera->addAnimator(animator);
+	_camera->setTarget(irr::core::vector3df(0, 0, 0));
 
 	//Set start values
 	_currentGameState = GAME_STATE::RUN;
 
 	//Create Game Elements here
 	_gameWorld = World(_manager);
+
+	//Players
+	_player1 = Player(_manager, _gameWorld.GetGameMatrix());
+	_player2 = Player(_manager, _gameWorld.GetGameMatrix());
 }
 
 void Game::Run()
@@ -45,6 +53,10 @@ void Game::Update()
 		}
 			break;
 		case GAME_STATE::RUN: {
+			
+			//Update players for handling user input
+			_player1.Update();
+			_player2.Update();
 
 		}
 			break;

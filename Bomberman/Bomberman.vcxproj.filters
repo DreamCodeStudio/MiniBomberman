@@ -31,6 +31,12 @@
     <Filter Include="Quelldateien\Game\World\Tile">
       <UniqueIdentifier>{0af19b30-3dfb-4dc5-bf83-5e1903156710}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Game\Player">
+      <UniqueIdentifier>{4c8a4c8e-f490-4be9-a4c2-b863f9fa066a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\Player">
+      <UniqueIdentifier>{d880441a-c0c1-45ff-a109-6f5f150cec91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\Game\Game.cpp">
@@ -45,6 +51,9 @@
     <ClCompile Include="code\Game\World\Tile\Tile.cpp">
       <Filter>Quelldateien\Game\World\Tile</Filter>
     </ClCompile>
+    <ClCompile Include="code\Game\Player\Player.cpp">
+      <Filter>Quelldateien\Game\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Game\Game.h">
@@ -58,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="code\Game\World\Tile\Tile.h">
       <Filter>Headerdateien\Game\World\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Game\Player\Player.h">
+      <Filter>Headerdateien\Game\Player</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 ﻿  Game.cpp
-c:\users\michael\desktop\bomberman\bomberman\code\game\game.cpp(15): warning C4305: "Argument": Verkürzung von "double" in "irr::f32"
+  Player.cpp
   Tile.cpp
   World.cpp
   main.cpp
