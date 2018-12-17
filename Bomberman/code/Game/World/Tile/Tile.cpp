@@ -28,9 +28,13 @@ void Tile::SetTileState(GAME_TILE_STATE tileState)
 			break;
 		case GAME_TILE_STATE::EMPTY: {
 
-			_tileModel->remove();
-			_currentGameTileState = tileState;
-
+			//Do not remove the tile model when it does not even have one
+			if (_tileModel != nullptr)
+			{
+				_tileModel->remove();
+				_currentGameTileState = tileState;
+				_tileModel = nullptr;
+			}
 		}
 			break;
 	}

@@ -3,34 +3,27 @@
 //The static variable to start value
 int Player::_instanceCounter = 0;
 
-Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix)
+Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::IGUIEnvironment *gui)
 {
 	//Save pointer to the game matrix, so the player can interact with the world
 	_gameMatrix = gameMatrix;
-	//test
-	for (int y = 0; y < 10; y++)
-	{
-		for (int x = 0; x < 10; x++)
-		{
-			if (_gameMatrix[y][x].GetTileState() == GAME_TILE_STATE::BLOCKED)
-			{
-				std::cout << "+";
-			}
-			else
-			{
-				std::cout << "#";
-			}
-		}
-		std::cout << std::endl;
-	}
+
+	//Save pointer to the scene manager, so items can load 3D-meshes later
+	_manager = manager;
 
 	//Count the current instance
 	_currentInstance = ++_instanceCounter;
 	std::cout << "Created Player instance " << _instanceCounter << std::endl;
-	
+
+	//Create inventory
+	_inventory = Inventory(manager, gui, _currentInstance);
+
+	//!!!Note there are 4 spawn positions implemented, but player controll and inventory class will only support
+	//!!!2 player instances.
+
 	//Select a spawn location for the player, according to the number of instances
 	switch (_currentInstance)	//The spawn locations are the corners of our game field
-	{
+	{							
 		case 1: {
 			_playerSpawnPosition = irr::core::vector3df(-7.5f, 0, -7.5f);
 		}
@@ -78,134 +71,53 @@ void Player::Update()
 	{
 		case 1: {
 
+			//For moving the player
 			if (GetAsyncKeyState(VK_UP))
 			{
-				//Set rotation in the walking direction
-				_playerModel->setRotation(irr::core::vector3df(0, 180, 0));		
-				
-				//First of all check if a collision would occurr on the targeted location
-				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 1.5f,
-				_playerModel->getAbsolutePosition().Y,
-				_playerModel->getAbsolutePosition().Z));
-
-				//Now check if a collision occurs if so set the player model back and exit
-				if (this->IsColliding())
-				{
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 1.5f,
-											_playerModel->getAbsolutePosition().Y,
-											_playerModel->getAbsolutePosition().Z));
-				}
-				else
-				{
-					//Set the model back and run the animation after it
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 1.5f,
-											_playerModel->getAbsolutePosition().Y,
-											_playerModel->getAbsolutePosition().Z));
-					//If no collision occured run the animation
-					//For a smooth walking animation call a thread which runs parallel
-					std::thread Thread(&Player::WalkingThread, this, WalkingDirection::UP);
-					Thread.detach();
-				}
-
+				this->Walk(WalkingDirection::UP);
 			}
 			if (GetAsyncKeyState(VK_LEFT))
 			{
-				_playerModel->setRotation(irr::core::vector3df(0, 90, 0));
-
-				//First of all check if a collision would occurr on the targeted location
-				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
-																_playerModel->getAbsolutePosition().Y,
-																_playerModel->getAbsolutePosition().Z + 1.5f));
-
-				//Now check if a collision occurs if so set the player model back and exit
-				if (this->IsColliding())
-				{
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
-																	_playerModel->getAbsolutePosition().Y,
-																	_playerModel->getAbsolutePosition().Z - 1.5f));
-				}
-				else
-				{
-					//Set the model back and run the animation after it
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
-																	_playerModel->getAbsolutePosition().Y,
-																	_playerModel->getAbsolutePosition().Z - 1.5f));
-					//If no collision occured run the animation
-					//For a smooth walking animation call a thread which runs parallel
-					std::thread Thread(&Player::WalkingThread, this, WalkingDirection::LEFT);
-					Thread.detach();
-				}
+				this->Walk(WalkingDirection::LEFT);
 			}
 			if (GetAsyncKeyState(VK_DOWN))
 			{
-				//Set rotation in the walking direction
-				_playerModel->setRotation(irr::core::vector3df(0, 0, 0));
-
-				//First of all check if a collision would occurr on the targeted location
-				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 1.5f,
-					_playerModel->getAbsolutePosition().Y,
-					_playerModel->getAbsolutePosition().Z));
-
-				//Now check if a collision occurs if so set the player model back and exit
-				if (this->IsColliding())
-				{
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 1.5f,
-						_playerModel->getAbsolutePosition().Y,
-						_playerModel->getAbsolutePosition().Z));
-				}
-				else
-				{
-					//Set the model back and run the animation after it
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 1.5f,
-						_playerModel->getAbsolutePosition().Y,
-						_playerModel->getAbsolutePosition().Z));
-					//If no collision occured run the animation
-					//For a smooth walking animation call a thread which runs parallel
-					std::thread Thread(&Player::WalkingThread, this, WalkingDirection::DOWN);
-					Thread.detach();
-				}
+				this->Walk(WalkingDirection::DOWN);
 			}
 			if (GetAsyncKeyState(VK_RIGHT))
 			{
-				_playerModel->setRotation(irr::core::vector3df(0, 270, 0));
+				this->Walk(WalkingDirection::RIGHT);
+			}
 
-				//First of all check if a collision would occurr on the targeted location
-				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
-					_playerModel->getAbsolutePosition().Y,
-					_playerModel->getAbsolutePosition().Z - 1.5f));
-
-				//Now check if a collision occurs if so set the player model back and exit
-				if (this->IsColliding())
-				{
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
-						_playerModel->getAbsolutePosition().Y,
-						_playerModel->getAbsolutePosition().Z + 1.5f));
-				}
-				else
-				{
-					//Set the model back and run the animation after it
-					_playerModel->updateAbsolutePosition();
-					_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
-						_playerModel->getAbsolutePosition().Y,
-						_playerModel->getAbsolutePosition().Z + 1.5f));
-					//If no collision occured run the animation
-					//For a smooth walking animation call a thread which runs parallel
-					std::thread Thread(&Player::WalkingThread, this, WalkingDirection::RIGHT);
-					Thread.detach();
-				}
+			//For using items
+			if (GetAsyncKeyState(VK_RCONTROL))
+			{
+				_bomb.Create(_manager, _playerModel->getAbsolutePosition(), _gameMatrix);
+				Sleep(500);
 			}
 		}
+				break;
+		case 2: {
+
+			if (GetAsyncKeyState('W'))
+			{
+				this->Walk(WalkingDirection::UP);
+
+			}
+			if (GetAsyncKeyState('A'))
+			{
+				this->Walk(WalkingDirection::LEFT);
+			}
+			if (GetAsyncKeyState('S'))
+			{
+				this->Walk(WalkingDirection::DOWN);
+			}
+			if (GetAsyncKeyState('D'))
+			{
+				this->Walk(WalkingDirection::RIGHT);
+			}
+		}
+				break;
 	}
 }
 
@@ -227,8 +139,141 @@ bool Player::IsColliding()
 	}
 	else
 	{
-		std::cout << "Matrix empty!" << std::endl;
 		return false;
+	}
+}
+
+void Player::Walk(WalkingDirection direction)
+{
+	switch (direction)
+	{
+		case WalkingDirection::UP: {
+			//Set rotation in the walking direction
+			_playerModel->setRotation(irr::core::vector3df(0, 180, 0));
+
+			//First of all check if a collision would occurr on the targeted location
+			_playerModel->updateAbsolutePosition();
+			_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 1.5f,
+				_playerModel->getAbsolutePosition().Y,
+				_playerModel->getAbsolutePosition().Z));
+
+			//Now check if a collision occurs if so set the player model back and exit
+			if (this->IsColliding())
+			{
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 1.5f,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z));
+			}
+			else
+			{
+				//Set the model back and run the animation after it
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 1.5f,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z));
+				//If no collision occured run the animation
+				//For a smooth walking animation call a thread which runs parallel
+				std::thread Thread(&Player::WalkingThread, this, WalkingDirection::UP);
+				Thread.detach();
+			}
+		}
+			break;
+		case WalkingDirection::LEFT: {
+
+			_playerModel->setRotation(irr::core::vector3df(0, 90, 0));
+
+			//First of all check if a collision would occurr on the targeted location
+			_playerModel->updateAbsolutePosition();
+			_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
+				_playerModel->getAbsolutePosition().Y,
+				_playerModel->getAbsolutePosition().Z + 1.5f));
+
+			//Now check if a collision occurs if so set the player model back and exit
+			if (this->IsColliding())
+			{
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z - 1.5f));
+			}
+			else
+			{
+				//Set the model back and run the animation after it
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z - 1.5f));
+				//If no collision occured run the animation
+				//For a smooth walking animation call a thread which runs parallel
+				std::thread Thread(&Player::WalkingThread, this, WalkingDirection::LEFT);
+				Thread.detach();
+			}
+		}
+			break;
+		case WalkingDirection::DOWN: {
+
+			//Set rotation in the walking direction
+			_playerModel->setRotation(irr::core::vector3df(0, 0, 0));
+
+			//First of all check if a collision would occurr on the targeted location
+			_playerModel->updateAbsolutePosition();
+			_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 1.5f,
+				_playerModel->getAbsolutePosition().Y,
+				_playerModel->getAbsolutePosition().Z));
+
+			//Now check if a collision occurs if so set the player model back and exit
+			if (this->IsColliding())
+			{
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 1.5f,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z));
+			}
+			else
+			{
+				//Set the model back and run the animation after it
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 1.5f,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z));
+				//If no collision occured run the animation
+				//For a smooth walking animation call a thread which runs parallel
+				std::thread Thread(&Player::WalkingThread, this, WalkingDirection::DOWN);
+				Thread.detach();
+			}
+		}
+			break;
+		case WalkingDirection::RIGHT: {
+			_playerModel->setRotation(irr::core::vector3df(0, 270, 0));
+
+			//First of all check if a collision would occurr on the targeted location
+			_playerModel->updateAbsolutePosition();
+			_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
+				_playerModel->getAbsolutePosition().Y,
+				_playerModel->getAbsolutePosition().Z - 1.5f));
+
+			//Now check if a collision occurs if so set the player model back and exit
+			if (this->IsColliding())
+			{
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z + 1.5f));
+			}
+			else
+			{
+				//Set the model back and run the animation after it
+				_playerModel->updateAbsolutePosition();
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
+					_playerModel->getAbsolutePosition().Y,
+					_playerModel->getAbsolutePosition().Z + 1.5f));
+				//If no collision occured run the animation
+				//For a smooth walking animation call a thread which runs parallel
+				std::thread Thread(&Player::WalkingThread, this, WalkingDirection::RIGHT);
+				Thread.detach();
+			}
+		}
 	}
 }
 
@@ -236,7 +281,6 @@ void Player::WalkingThread(WalkingDirection direction)
 {
 	//As long as the player is walking the user should not change the walking direction
 	_isWalking = true;
-	std::cout << "run " << std::endl;
 	std::cout << std::endl;
 
 	//Now move the player every couple of ms a little bit in the direction

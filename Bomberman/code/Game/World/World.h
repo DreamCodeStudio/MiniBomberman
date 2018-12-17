@@ -36,5 +36,4 @@ class World
 
 		//Matrix to know which Game tiles are blocked, available, or currently under fire
 		Tile **_gameMatrix;
-
 };

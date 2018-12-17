@@ -37,6 +37,24 @@
     <Filter Include="Quelldateien\Game\Player">
       <UniqueIdentifier>{d880441a-c0c1-45ff-a109-6f5f150cec91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Game\Player\Inventory">
+      <UniqueIdentifier>{ccea37f5-9cf0-4c0d-b34a-828ead44e571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\Player\Inventory">
+      <UniqueIdentifier>{10675ad6-5c0c-455f-8e3d-dbdd86e1e2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Game\Player\Inventory\Items">
+      <UniqueIdentifier>{a04932ea-3bb7-48c7-a57a-4dca53cc4851}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\Player\Inventory\Items">
+      <UniqueIdentifier>{8c549f68-5c7b-4b5a-b96e-0b417d3fd611}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Game\Player\Inventory\Items\Bomb">
+      <UniqueIdentifier>{b94c1811-843a-4147-acd3-520287dbc72f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Game\Player\Inventory\Items\Bomb">
+      <UniqueIdentifier>{a8ad082e-204f-49c7-81c7-92b556f4f900}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="code\Game\Game.cpp">
@@ -54,6 +72,12 @@
     <ClCompile Include="code\Game\Player\Player.cpp">
       <Filter>Quelldateien\Game\Player</Filter>
     </ClCompile>
+    <ClCompile Include="code\Game\Player\Inventory\Inventory.cpp">
+      <Filter>Quelldateien\Game\Player\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Game\Player\Inventory\Items\Bomb\Bomb.cpp">
+      <Filter>Quelldateien\Game\Player\Inventory\Items\Bomb</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Game\Game.h">
@@ -70,6 +94,15 @@
     </ClInclude>
     <ClInclude Include="code\Game\Player\Player.h">
       <Filter>Headerdateien\Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Game\Player\Inventory\Inventory.h">
+      <Filter>Headerdateien\Game\Player\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Game\Player\Inventory\Items\Item.h">
+      <Filter>Headerdateien\Game\Player\Inventory\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Game\Player\Inventory\Items\Bomb\Bomb.h">
+      <Filter>Headerdateien\Game\Player\Inventory\Items\Bomb</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

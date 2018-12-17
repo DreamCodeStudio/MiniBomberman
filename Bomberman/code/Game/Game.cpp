@@ -6,16 +6,16 @@ Game::Game()
 	_device = irr::createDevice(irr::video::E_DRIVER_TYPE::EDT_DIRECT3D9, irr::core::dimension2d<irr::u32>(1920, 1080),
 								16U, false, false, true, 0);
 
-	//Get video driver and scene manager
+	//Get video driver and scene manager and gui environment
 	_driver = _device->getVideoDriver();
 	_manager = _device->getSceneManager();
+	_gui = _manager->getGUIEnvironment();
 
 	//Create first person camera. The player can controll the camera via the LeapMotion controller
 	//Because this is kind of an ego-shooter we use a first person camera here. 
 	//_camera = _manager->addCameraSceneNodeFPS(0, 100, 0.05f);
 	_camera = _manager->addCameraSceneNode(0, irr::core::vector3df(9, 17, -10));
-	irr::scene::ISceneNodeAnimator* animator = _manager->createFlyCircleAnimator(irr::core::vector3df(0, 14, 0), 12, 0.0001f);
-	_camera->addAnimator(animator);
+	_camera->addAnimator(_manager->createFlyCircleAnimator(irr::core::vector3df(0, 14, 0), 12, 0.0001f));
 	_camera->setTarget(irr::core::vector3df(0, 0, 0));
 
 	//Set start values
@@ -25,8 +25,8 @@ Game::Game()
 	_gameWorld = World(_manager);
 
 	//Players
-	_player1 = Player(_manager, _gameWorld.GetGameMatrix());
-	_player2 = Player(_manager, _gameWorld.GetGameMatrix());
+	_player1 = Player(_manager, _gameWorld.GetGameMatrix(), _gui);
+	_player2 = Player(_manager, _gameWorld.GetGameMatrix(), _gui);
 }
 
 void Game::Run()
@@ -70,6 +70,7 @@ void Game::Render()
 	_driver->beginScene(true, true, irr::video::SColor(150, 150, 150, 150));
 
 	_manager->drawAll();	//Draw all objects which were added to the scene to the window
+	_gui->drawAll();		//Draw all gui objects like item counter, item images and icons
 
 	_driver->endScene();
 }

@@ -1,4 +1,6 @@
 ﻿  Game.cpp
+  Inventory.cpp
+  Bomb.cpp
   Player.cpp
   Tile.cpp
   World.cpp

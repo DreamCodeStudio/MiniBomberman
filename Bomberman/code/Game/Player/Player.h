@@ -10,6 +10,12 @@
 //Tile.h for modifieng the tiles, placing bombs, collecting items
 #include "..\World\Tile\Tile.h"
 
+//Inventory class for handling the collected items of the player during the game
+#include "Inventory/Inventory.h"
+
+//All the items which can get used by the player are organized in classes
+#include "Inventory/Items/Bomb/Bomb.h"
+
 //Windows.h for reveiving key input events
 #include <Windows.h>
 
@@ -25,7 +31,7 @@ class Player
 	public:
 
 		///<summary>The constructor loads the 3D-models e.g. player model, bombs...</summary>
-		Player(irr::scene::ISceneManager *manager, Tile **gameMatrix);
+		Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::IGUIEnvironment *gui);
 		Player();
 
 		///<summary>The Update method receives the user input and handles animations</summary>
@@ -42,7 +48,15 @@ class Player
 
 		//Collision detection function 
 		bool IsColliding();
+		
+		void Walk(WalkingDirection direction);
 		void WalkingThread(WalkingDirection direction);
+
+		//Pointer to the scene manager so it can get passed to the create method of items for loading item meshes
+		irr::scene::ISceneManager *_manager;
+
+		//Inventory class so the player can collect and use items during the game
+		Inventory _inventory;
 
 		//Pointer to the game matrix, so the player can collect items, destroy tiles and more 
 		Tile** _gameMatrix;
@@ -57,5 +71,8 @@ class Player
 		//Every player instance has it's own corner to spawn
 		static int _instanceCounter;
 		int _currentInstance;
+
+		//item test
+		Bomb _bomb;
 
 };

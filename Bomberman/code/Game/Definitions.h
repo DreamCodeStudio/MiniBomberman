@@ -11,3 +11,8 @@ enum GAME_TILE_STATE {
 	BLOCKED,
 	EMPTY
 };
+
+//Define items
+enum GAME_ITEM{
+	BOMB,
+};

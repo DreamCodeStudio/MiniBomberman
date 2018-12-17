@@ -40,6 +40,7 @@ class Game
 		irr::IrrlichtDevice *_device;			//The irrlicht device for creating the window
 		irr::video::IVideoDriver *_driver;		//Video driver 
 		irr::scene::ISceneManager *_manager;	//Scene manager for creating the game scene
+		irr::gui::IGUIEnvironment *_gui;		//GUI environment for showing each player an item list 
 
 		irr::scene::ICameraSceneNode *_camera;	//Camera 
 
