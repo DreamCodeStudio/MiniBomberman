@@ -31,7 +31,7 @@ Inventory::Inventory(irr::scene::ISceneManager *manager, irr::gui::IGUIEnvironme
 		case 2: {
 
 			//Add an label, so the players know which item list belongs to which player
-			_label = _gui->addStaticText(irr::core::stringw("Player 2").c_str(), irr::core::recti(10, 10, 100, 30));
+			_label = _gui->addStaticText(irr::core::stringw("Player 2").c_str(), irr::core::recti(1800, 10, 1900, 30));
 
 			//Add an Image and a counter for each item
 

@@ -66,7 +66,6 @@ void Game::Update()
 void Game::Render()
 {
 	//Draw scene here
-
 	_driver->beginScene(true, true, irr::video::SColor(150, 150, 150, 150));
 
 	_manager->drawAll();	//Draw all objects which were added to the scene to the window

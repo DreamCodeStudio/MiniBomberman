@@ -11,6 +11,10 @@ void Tile::Create(irr::scene::ISceneManager *manager, irr::core::vector3df tileP
 	//Save tile state
 	_currentGameTileState = tileState;
 
+	//Load tile model
+	_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\Tile\\Tile.obj")); //Load model
+	_tileModel->setPosition(_tilePosition);	//Set position
+
 	//Load the model according to the TileState
 	this->SetTileState(tileState);
 }
@@ -21,20 +25,16 @@ void Tile::SetTileState(GAME_TILE_STATE tileState)
 	{
 		case GAME_TILE_STATE::BLOCKED: {
 
-			_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\Tile\\Tile.obj")); //Load model
-			_tileModel->setPosition(_tilePosition);	//Set position
+			_tileModel->setVisible(true);
 			_currentGameTileState = tileState;		//Save updated tile state
 		}
 			break;
 		case GAME_TILE_STATE::EMPTY: {
 
 			//Do not remove the tile model when it does not even have one
-			if (_tileModel != nullptr)
-			{
-				_tileModel->remove();
-				_currentGameTileState = tileState;
-				_tileModel = nullptr;
-			}
+			_tileModel->setVisible(false);
+			_currentGameTileState = tileState;
+			
 		}
 			break;
 	}

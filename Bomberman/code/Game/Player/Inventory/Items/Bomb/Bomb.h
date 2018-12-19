@@ -24,5 +24,4 @@ class Bomb : public Item
 	private:
 
 		irr::scene::IAnimatedMeshSceneNode *_bombMesh;
-
 };

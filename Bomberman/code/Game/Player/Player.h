@@ -22,6 +22,12 @@
 //For a smooth walking animation we need threads
 #include <thread>
 
+//For storing items which are currently in game
+#include <vector>
+
+//For some calculations like rounding
+#include <cmath>
+
 ///<summary>
 ///The player class handles all the user input and the player figure in game.
 ///</summary>
@@ -72,7 +78,10 @@ class Player
 		static int _instanceCounter;
 		int _currentInstance;
 
-		//item test
-		Bomb _bomb;
+		//Every item which is used by the player an is currently existing in the ingame world should get stored here
+		std::vector<Item*> _itemStorage;
+		//Using an item has a cooldown so the player does not accidantly use a few of them
+		int _itemCooldown;
+
 
 };

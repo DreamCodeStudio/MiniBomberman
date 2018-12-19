@@ -52,6 +52,9 @@ Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::
 
 	//Set start values
 	_isWalking = false;
+
+	//Set start values
+	_itemCooldown = 0;
 }
 
 Player::Player()
@@ -61,6 +64,10 @@ Player::Player()
 
 void Player::Update()
 {
+	//Lower the cooldown every frame
+	_itemCooldown++;
+
+	//While the player is still walking - do not take any commands
 	if (_isWalking)
 	{
 		return;
@@ -90,15 +97,21 @@ void Player::Update()
 			}
 
 			//For using items
-			if (GetAsyncKeyState(VK_RCONTROL))
+			if (GetAsyncKeyState(VK_RCONTROL) && _itemCooldown > 50)
 			{
-				_bomb.Create(_manager, _playerModel->getAbsolutePosition(), _gameMatrix);
-				Sleep(500);
+				std::cout << "Running in instance 1! Dropping bomb!" << std::endl;
+				//Create a new bomb object and store it
+				_itemStorage.push_back(new Bomb);
+				_itemStorage[_itemStorage.size() - 1]->Create(_manager, _playerModel->getAbsolutePosition(), _gameMatrix);
+				
+				//Set cooldown 
+				_itemCooldown = 0;
 			}
 		}
 				break;
 		case 2: {
 
+			//For moving the player
 			if (GetAsyncKeyState('W'))
 			{
 				this->Walk(WalkingDirection::UP);
@@ -116,6 +129,18 @@ void Player::Update()
 			{
 				this->Walk(WalkingDirection::RIGHT);
 			}
+
+			//For using items
+			if (GetAsyncKeyState(VK_SPACE) && _itemCooldown > 50)
+			{
+				std::cout << "Running in instance 2! Dropping bomb!" << std::endl;
+				//Create a new bomb object and store it
+				_itemStorage.push_back(new Bomb);
+				_itemStorage[_itemStorage.size() - 1]->Create(_manager, _playerModel->getAbsolutePosition(), _gameMatrix);
+			
+				//Set item cooldown
+				_itemCooldown = 0;
+			}
 		}
 				break;
 	}
@@ -126,8 +151,8 @@ void Player::Update()
 bool Player::IsColliding()
 {
 	_playerModel->updateAbsolutePosition();
-	int xPosition = static_cast<int>(_playerModel->getAbsolutePosition().X / 1.5f) + 5;
-	int zPosition = static_cast<int>(_playerModel->getAbsolutePosition().Z / 1.5f) + 5;
+	int xPosition = static_cast<int>(round(_playerModel->getAbsolutePosition().X / 1.5)) + 5;
+	int zPosition = static_cast<int>(round(_playerModel->getAbsolutePosition().Z / 1.5)) + 5;
 
 	if (zPosition < 0 || zPosition > 9 || xPosition < 0 || xPosition > 9)
 	{
@@ -281,7 +306,6 @@ void Player::WalkingThread(WalkingDirection direction)
 {
 	//As long as the player is walking the user should not change the walking direction
 	_isWalking = true;
-	std::cout << std::endl;
 
 	//Now move the player every couple of ms a little bit in the direction
 	for (unsigned int i = 0; i < 75; i++)

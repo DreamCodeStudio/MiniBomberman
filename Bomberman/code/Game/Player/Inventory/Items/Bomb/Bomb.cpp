@@ -7,6 +7,7 @@ void Bomb::Create(irr::scene::ISceneManager *manager, irr::core::vector3df playe
 
 	std::thread thread(&Bomb::InteractWithWorld, this, gameMatrix);
 	thread.detach();
+	//this->InteractWithWorld(gameMatrix);
 }
 
 void Bomb::InteractWithWorld(Tile **gameMatrix)
@@ -24,8 +25,8 @@ void Bomb::InteractWithWorld(Tile **gameMatrix)
 	//If tiles around the bomb exists - remove them 
 
 	//First: Get the coords of the bomb in the game matrix
-	int xPosition = static_cast<int>(_bombMesh->getAbsolutePosition().X / 1.5f) + 5;
-	int zPosition = static_cast<int>(_bombMesh->getAbsolutePosition().Z / 1.5f) + 5;
+	int xPosition = static_cast<int>(round(_bombMesh->getAbsolutePosition().X / 1.5f)) + 5;
+	int zPosition = static_cast<int>(round(_bombMesh->getAbsolutePosition().Z / 1.5f)) + 5;
 
 	int setter = 0;
 	//Second: Remove every Tile around the bomb
@@ -51,7 +52,7 @@ void Bomb::InteractWithWorld(Tile **gameMatrix)
 	}
 
 	//Third: Remove the bomb mesh (because it exploded and does not exist anymore)
-	_bombMesh->remove();
+	_bombMesh->setVisible(false);
 
 	std::cout << "Exited interaction thread!" << std::endl;
 	std::cout << "Set " << setter << " Tiles to empty!" << std::endl;
