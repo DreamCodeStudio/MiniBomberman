@@ -35,6 +35,4 @@ class Tile
 		irr::scene::IAnimatedMeshSceneNode *_tileModel;
 		irr::core::vector3df _tilePosition;
 		GAME_TILE_STATE _currentGameTileState;
-		
-		int test;
 };

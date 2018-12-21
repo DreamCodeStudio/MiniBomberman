@@ -58,6 +58,15 @@ void Game::Update()
 			_player1.Update();
 			_player2.Update();
 
+			if (_player1.GetWinLoseStatus() == 1 || _player2.GetWinLoseStatus() == -1)
+			{
+				std::cout << "Player 1 won!" << std::endl;
+			}
+			if (_player2.GetWinLoseStatus() == 1 || _player1.GetWinLoseStatus() == -1)
+			{
+				std::cout << "Player 2 won!" << std::endl;
+			}
+
 		}
 			break;
 	}

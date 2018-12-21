@@ -25,16 +25,27 @@ void Tile::SetTileState(GAME_TILE_STATE tileState)
 	{
 		case GAME_TILE_STATE::BLOCKED: {
 
+			//Set the model visible and change the tile state
 			_tileModel->setVisible(true);
 			_currentGameTileState = tileState;		//Save updated tile state
 		}
 			break;
 		case GAME_TILE_STATE::EMPTY: {
 
-			//Do not remove the tile model when it does not even have one
+			//Set the model to invisible and change the tile state
 			_tileModel->setVisible(false);
 			_currentGameTileState = tileState;
 			
+		}
+			break;
+		case GAME_TILE_STATE::PLAYER1_STANDS: {
+			
+			_currentGameTileState = tileState;
+		}
+			break;
+		case GAME_TILE_STATE::PLAYER2_STANDS: {
+
+			_currentGameTileState = tileState;
 		}
 			break;
 	}

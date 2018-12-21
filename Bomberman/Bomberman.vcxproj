@@ -128,6 +128,7 @@
     <ClCompile Include="code\Game\Game.cpp" />
     <ClCompile Include="code\Game\Player\Inventory\Inventory.cpp" />
     <ClCompile Include="code\Game\Player\Inventory\Items\Bomb\Bomb.cpp" />
+    <ClCompile Include="code\Game\Player\Inventory\Items\Item.cpp" />
     <ClCompile Include="code\Game\Player\Player.cpp" />
     <ClCompile Include="code\Game\World\Tile\Tile.cpp" />
     <ClCompile Include="code\Game\World\World.cpp" />

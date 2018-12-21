@@ -28,10 +28,10 @@
 //For some calculations like rounding
 #include <cmath>
 
+
 ///<summary>
 ///The player class handles all the user input and the player figure in game.
 ///</summary>
-
 class Player
 {
 	public:
@@ -43,6 +43,9 @@ class Player
 		///<summary>The Update method receives the user input and handles animations</summary>
 		void Update();
 
+		///<summary>The game over method gets called automatically by the bomb class if the player was hit by an explosion</summary>
+		int GetWinLoseStatus();
+
 	private:
 
 		enum WalkingDirection {
@@ -52,11 +55,16 @@ class Player
 			RIGHT,
 		};
 
-		//Collision detection function 
+		//Player control methods for using items, waling and so on...
+		void PlayerControl();
 		bool IsColliding();
-		
 		void Walk(WalkingDirection direction);
 		void WalkingThread(WalkingDirection direction);
+
+
+		//Other update methods
+		void UpdatePlayerStandTile();
+		void UpdateEnemyGameOver();
 
 		//Pointer to the scene manager so it can get passed to the create method of items for loading item meshes
 		irr::scene::ISceneManager *_manager;
@@ -83,5 +91,6 @@ class Player
 		//Using an item has a cooldown so the player does not accidantly use a few of them
 		int _itemCooldown;
 
-
+		//If the player won the game
+		int _winLoseStatus;
 };

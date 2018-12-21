@@ -19,6 +19,9 @@ class Item
 	public:
 
 		virtual void Create(irr::scene::ISceneManager *manager, irr::core::vector3df playerPos, Tile **gameMatrix) = 0;
+		
+		int GetThreadExitStatus();
+		GAME_ITEM GetItemType();
 
 	protected:
 
@@ -29,5 +32,8 @@ class Item
 		///			case the function gets called as a thread from the Create method and the player class does not need
 		///			to use it.</summary>
 		virtual void InteractWithWorld(Tile **gameMatrix) = 0;
+
+		int _threadExitStatus;
+		GAME_ITEM _itemType;
 
 };

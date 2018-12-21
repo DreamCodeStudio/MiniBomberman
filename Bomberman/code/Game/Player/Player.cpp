@@ -52,8 +52,7 @@ Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::
 
 	//Set start values
 	_isWalking = false;
-
-	//Set start values
+	_winLoseStatus = 0;
 	_itemCooldown = 0;
 }
 
@@ -63,6 +62,25 @@ Player::Player()
 }
 
 void Player::Update()
+{
+	//Update and handle all the user input
+	this->PlayerControl();
+
+	//This method checks the return value of the bomb threads. If the return value is the number of the other player instance 
+	//we have won
+	this->UpdateEnemyGameOver();
+}
+
+int Player::GetWinLoseStatus()
+{
+	return _winLoseStatus;
+}
+
+/* ##### Private ###### */
+
+
+/* ######## Alle methods for the player control (using items, walking) are implemented here ######## */
+void Player::PlayerControl()
 {
 	//Lower the cooldown every frame
 	_itemCooldown++;
@@ -103,7 +121,8 @@ void Player::Update()
 				//Create a new bomb object and store it
 				_itemStorage.push_back(new Bomb);
 				_itemStorage[_itemStorage.size() - 1]->Create(_manager, _playerModel->getAbsolutePosition(), _gameMatrix);
-				
+				//Delete method needs to get implemented, so the memory gets freed again
+
 				//Set cooldown 
 				_itemCooldown = 0;
 			}
@@ -137,7 +156,7 @@ void Player::Update()
 				//Create a new bomb object and store it
 				_itemStorage.push_back(new Bomb);
 				_itemStorage[_itemStorage.size() - 1]->Create(_manager, _playerModel->getAbsolutePosition(), _gameMatrix);
-			
+
 				//Set item cooldown
 				_itemCooldown = 0;
 			}
@@ -145,8 +164,6 @@ void Player::Update()
 				break;
 	}
 }
-
-/* ##### Private ###### */
 
 bool Player::IsColliding()
 {
@@ -308,20 +325,20 @@ void Player::WalkingThread(WalkingDirection direction)
 	_isWalking = true;
 
 	//Now move the player every couple of ms a little bit in the direction
-	for (unsigned int i = 0; i < 75; i++)
+	for (unsigned int i = 0; i < 750; i++)
 	{
 		switch (direction)
 		{
 			case UP: {
 				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 0.02f,
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 0.002f,
 				_playerModel->getAbsolutePosition().Y,
 				_playerModel->getAbsolutePosition().Z));
 			}
 				break;
 			case DOWN: {
 				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 0.02f,
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 0.002f,
 					_playerModel->getAbsolutePosition().Y,
 					_playerModel->getAbsolutePosition().Z));
 			}
@@ -330,19 +347,89 @@ void Player::WalkingThread(WalkingDirection direction)
 				_playerModel->updateAbsolutePosition();
 				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
 					_playerModel->getAbsolutePosition().Y,
-					_playerModel->getAbsolutePosition().Z + 0.02f));
+					_playerModel->getAbsolutePosition().Z + 0.002f));
 			}
 					 break;
 			case RIGHT: {
 				_playerModel->updateAbsolutePosition();
 				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
 					_playerModel->getAbsolutePosition().Y,
-					_playerModel->getAbsolutePosition().Z - 0.02f));
+					_playerModel->getAbsolutePosition().Z - 0.002f));
 			}
 					 break;
 		}
-		Sleep(1);
+		//Sleep(1);
 	}
 
 	_isWalking = false;
+
+	//Set the tile on which the player is standing to a specific state, so the bomb class knows if a player was blown up
+	this->UpdatePlayerStandTile();
+}
+
+/* ###### End of player control methods ######## */
+
+void Player::UpdatePlayerStandTile()
+{
+	//Get the current position of the player in the matrix...
+	int xPosition = static_cast<int>(round(_playerModel->getAbsolutePosition().X / 1.5)) + 5;
+	int zPosition = static_cast<int>(round(_playerModel->getAbsolutePosition().Z / 1.5)) + 5;
+
+	//According to the player instance number, set the tile on which the player is currently standing to a specific value
+	if (_currentInstance == 1)
+	{
+		_gameMatrix[zPosition][xPosition].SetTileState(GAME_TILE_STATE::PLAYER1_STANDS);
+	}
+	if (_currentInstance == 2)
+	{
+		_gameMatrix[zPosition][xPosition].SetTileState(GAME_TILE_STATE::PLAYER2_STANDS);
+	}
+
+	//Go through the whole tile field and set the old standing position to empty
+	for (unsigned int y = 0; y < 10; y++)
+	{
+		for (unsigned int x = 0; x < 10; x++)
+		{
+			if (_currentInstance == 1)
+			{
+				if (_gameMatrix[y][x].GetTileState() == GAME_TILE_STATE::PLAYER1_STANDS && (y != zPosition || x != xPosition))
+				{
+					_gameMatrix[y][x].SetTileState(GAME_TILE_STATE::EMPTY);
+				}
+			}
+			if (_currentInstance == 2)
+			{
+				if (_gameMatrix[y][x].GetTileState() == GAME_TILE_STATE::PLAYER2_STANDS && (y != zPosition || x != xPosition))
+				{
+					_gameMatrix[y][x].SetTileState(GAME_TILE_STATE::EMPTY);
+				}
+			}
+		}
+	}
+}
+
+void Player::UpdateEnemyGameOver()
+{
+	for (unsigned int i = 0; i < _itemStorage.size(); i++)
+	{
+		if (_itemStorage[i]->GetItemType() == GAME_ITEM::BOMB)
+		{
+			if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 1)
+			{
+				_winLoseStatus = -1;
+			}
+			if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 2)
+			{
+				_winLoseStatus = 1;
+			}
+			if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 2)
+			{
+				_winLoseStatus = -1;
+			}
+			if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 1)
+			{
+				_winLoseStatus = 1;
+			}
+		}
+	}
 }

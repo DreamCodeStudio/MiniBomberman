@@ -1,8 +1,4 @@
 #pragma once
-#include <iostream>
-
-//3D-Engine
-#include <irrlicht.h>
 
 //Inerhitance
 #include "..\Item.h"
@@ -19,9 +15,9 @@ class Bomb : public Item
 	public:
 
 		void Create(irr::scene::ISceneManager *manager, irr::core::vector3df playerPos, Tile **gameMatrix) override;
+
+	protected:
+
 		void InteractWithWorld(Tile **gameMatrix) override;
-
-	private:
-
 		irr::scene::IAnimatedMeshSceneNode *_bombMesh;
 };

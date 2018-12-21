@@ -9,7 +9,9 @@ enum GAME_STATE {
 //Define different game tile states
 enum GAME_TILE_STATE {
 	BLOCKED,
-	EMPTY
+	EMPTY,
+	PLAYER1_STANDS,
+	PLAYER2_STANDS
 };
 
 //Define items

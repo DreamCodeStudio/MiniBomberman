@@ -78,6 +78,9 @@
     <ClCompile Include="code\Game\Player\Inventory\Items\Bomb\Bomb.cpp">
       <Filter>Quelldateien\Game\Player\Inventory\Items\Bomb</Filter>
     </ClCompile>
+    <ClCompile Include="code\Game\Player\Inventory\Items\Item.cpp">
+      <Filter>Quelldateien\Game\Player\Inventory\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Game\Game.h">
