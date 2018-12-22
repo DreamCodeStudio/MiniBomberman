@@ -32,10 +32,44 @@ void Tile::SetTileState(GAME_TILE_STATE tileState)
 			break;
 		case GAME_TILE_STATE::EMPTY: {
 
+			_currentGameTileState = tileState;	
+		}
+			break;
+		case GAME_TILE_STATE::DESTROY: {
+			//!!!!!!!!!!
+			//Note that DESTROY does the same as EMPTY: It sets the TILE_STATE to EMPTY
+			//The only difference is, that DESTROY also removes the mesh graphically
+			//We need this because tiles often change the state between PLAYER_STANDS and empty (if a player walks over them)
+			//But we do not want the setVisible() method called everytime. We only want it to be called when the Bomb class actually
+			//removes anything. So the bomb class calls the DESTROY state, which in the end leads to the same result: an EMPTY tile
+
 			//Set the model to invisible and change the tile state
 			_tileModel->setVisible(false);
-			_currentGameTileState = tileState;
-			
+			_currentGameTileState = GAME_TILE_STATE::EMPTY;
+		}
+			break;
+		case GAME_TILE_STATE::MARKED: {
+			//!!!!!!!!!!!!!!!!!!!!!!!!!//
+			//!!!!! Note  that the MARKED tile state is not a "real" tile state. It does not overwrite
+			//!!!!! the _currentGameTileState member. It only changes the graphical appereance of the 
+			//!!!!! tile Model. (After the bomb exploded all marked tiles will be set to empty anyways)
+			//!!!!!!!!!!!!!!!!!!!!!!!!!//
+
+			//Change the color of the block so the blocked is marked, and the player knows that this block is effected by a following 
+			//explosion
+
+			//If a tile with a solid block is under explosion -> make the block transparent
+			if (_tileModel->isVisible() && _tileModel->getMesh() == _manager->getMesh("Assets\\Models\\Tile\\Tile.obj"))
+			{
+				_tileModel->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
+			}
+			else //A empty Tile can also be under explosion 
+			{
+				//Load a tile model which indicates that this tile is under explosion
+				_tileModel->remove();
+				_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\MarkedTile\\MarkedTile.obj"), 0, -1,
+																_tilePosition);
+			}
 		}
 			break;
 		case GAME_TILE_STATE::PLAYER1_STANDS: {

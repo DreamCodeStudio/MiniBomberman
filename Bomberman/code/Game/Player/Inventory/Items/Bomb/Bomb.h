@@ -19,5 +19,10 @@ class Bomb : public Item
 	protected:
 
 		void InteractWithWorld(Tile **gameMatrix) override;
+
+		//Only implemented in the bomb class
+		void SetBombEffectedTiles(Tile **gameMatrix, GAME_TILE_STATE state);
+		void CheckForPlayerHit(Tile **gameMatrix);
+
 		irr::scene::IAnimatedMeshSceneNode *_bombMesh;
 };

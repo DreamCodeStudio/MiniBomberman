@@ -46,6 +46,9 @@ class Player
 		///<summary>The game over method gets called automatically by the bomb class if the player was hit by an explosion</summary>
 		int GetWinLoseStatus();
 
+		///<summary>This method is called if the player died</summary>
+		void GameOver();
+
 	private:
 
 		enum WalkingDirection {
@@ -93,4 +96,5 @@ class Player
 
 		//If the player won the game
 		int _winLoseStatus;
+		bool _gameOver;
 };

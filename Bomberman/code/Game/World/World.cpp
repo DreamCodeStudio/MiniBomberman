@@ -25,24 +25,24 @@ World::World(irr::scene::ISceneManager *manager)
 
 	//Remove the corners, so the player can spawn and start playing
 	//Top left corner
-	_gameMatrix[0][0].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[0][1].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[1][0].SetTileState(GAME_TILE_STATE::EMPTY);
+	_gameMatrix[0][0].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[0][1].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[1][0].SetTileState(GAME_TILE_STATE::DESTROY);
 
 	//Top right corner
-	_gameMatrix[0][9].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[1][9].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[0][8].SetTileState(GAME_TILE_STATE::EMPTY);
+	_gameMatrix[0][9].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[1][9].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[0][8].SetTileState(GAME_TILE_STATE::DESTROY);
 
 	//Bot right corner
-	_gameMatrix[9][9].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[8][9].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[9][8].SetTileState(GAME_TILE_STATE::EMPTY);
+	_gameMatrix[9][9].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[8][9].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[9][8].SetTileState(GAME_TILE_STATE::DESTROY);
 
 	//Bot left corner
-	_gameMatrix[9][0].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[8][0].SetTileState(GAME_TILE_STATE::EMPTY);
-	_gameMatrix[9][1].SetTileState(GAME_TILE_STATE::EMPTY);
+	_gameMatrix[9][0].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[8][0].SetTileState(GAME_TILE_STATE::DESTROY);
+	_gameMatrix[9][1].SetTileState(GAME_TILE_STATE::DESTROY);
 
 	//Create some light in the scene
 	//For testing create a simple cube here

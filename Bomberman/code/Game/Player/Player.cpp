@@ -52,6 +52,7 @@ Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::
 
 	//Set start values
 	_isWalking = false;
+	_gameOver = false;	//Is set to true if the game class calls the "GameOver" method
 	_winLoseStatus = 0;
 	_itemCooldown = 0;
 }
@@ -76,6 +77,12 @@ int Player::GetWinLoseStatus()
 	return _winLoseStatus;
 }
 
+void Player::GameOver()
+{
+	_gameOver = true; //Set game over to true, so the player does not react on inputs
+	_playerModel->setVisible(false); //If the player died -> set model invisible
+}
+
 /* ##### Private ###### */
 
 
@@ -86,7 +93,7 @@ void Player::PlayerControl()
 	_itemCooldown++;
 
 	//While the player is still walking - do not take any commands
-	if (_isWalking)
+	if (_isWalking || _gameOver)
 	{
 		return;
 	}
@@ -175,7 +182,8 @@ bool Player::IsColliding()
 	{
 		return true;
 	}
-	else if (_gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::BLOCKED)
+	else if (_gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::BLOCKED ||
+			 _gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::MARKED)
 	{
 		return true;
 	}
@@ -410,18 +418,23 @@ void Player::UpdatePlayerStandTile()
 
 void Player::UpdateEnemyGameOver()
 {
+	//Go through all exit codes 
 	for (unsigned int i = 0; i < _itemStorage.size(); i++)
 	{
 		if (_itemStorage[i]->GetItemType() == GAME_ITEM::BOMB)
 		{
+			//If the player blew up himself
 			if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 1)
 			{
 				_winLoseStatus = -1;
 			}
+			//If the player killed the enemy player
 			if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 2)
 			{
 				_winLoseStatus = 1;
 			}
+
+			//The same as above
 			if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 2)
 			{
 				_winLoseStatus = -1;

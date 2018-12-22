@@ -60,11 +60,11 @@ void Game::Update()
 
 			if (_player1.GetWinLoseStatus() == 1 || _player2.GetWinLoseStatus() == -1)
 			{
-				std::cout << "Player 1 won!" << std::endl;
+				_player2.GameOver();
 			}
 			if (_player2.GetWinLoseStatus() == 1 || _player1.GetWinLoseStatus() == -1)
 			{
-				std::cout << "Player 2 won!" << std::endl;
+				_player1.GameOver();
 			}
 
 		}
