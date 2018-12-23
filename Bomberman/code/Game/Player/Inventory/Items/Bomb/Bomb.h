@@ -25,4 +25,9 @@ class Bomb : public Item
 		void CheckForPlayerHit(Tile **gameMatrix);
 
 		irr::scene::IAnimatedMeshSceneNode *_bombMesh;
+		irr::scene::IParticleSystemSceneNode *_particleSystem;
+		irr::scene::IParticleEmitter *_particleEmitter;
+
+
+
 };

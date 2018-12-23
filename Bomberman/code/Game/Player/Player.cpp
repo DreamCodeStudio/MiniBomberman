@@ -333,20 +333,20 @@ void Player::WalkingThread(WalkingDirection direction)
 	_isWalking = true;
 
 	//Now move the player every couple of ms a little bit in the direction
-	for (unsigned int i = 0; i < 750; i++)
+	for (unsigned int i = 0; i < 50; i++)
 	{
 		switch (direction)
 		{
 			case UP: {
 				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 0.002f,
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X + 0.03f,
 				_playerModel->getAbsolutePosition().Y,
 				_playerModel->getAbsolutePosition().Z));
 			}
 				break;
 			case DOWN: {
 				_playerModel->updateAbsolutePosition();
-				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 0.002f,
+				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X - 0.03f,
 					_playerModel->getAbsolutePosition().Y,
 					_playerModel->getAbsolutePosition().Z));
 			}
@@ -355,18 +355,18 @@ void Player::WalkingThread(WalkingDirection direction)
 				_playerModel->updateAbsolutePosition();
 				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
 					_playerModel->getAbsolutePosition().Y,
-					_playerModel->getAbsolutePosition().Z + 0.002f));
+					_playerModel->getAbsolutePosition().Z + 0.03f));
 			}
 					 break;
 			case RIGHT: {
 				_playerModel->updateAbsolutePosition();
 				_playerModel->setPosition(irr::core::vector3df(_playerModel->getAbsolutePosition().X,
 					_playerModel->getAbsolutePosition().Y,
-					_playerModel->getAbsolutePosition().Z - 0.002f));
+					_playerModel->getAbsolutePosition().Z - 0.03f));
 			}
 					 break;
 		}
-		//Sleep(1);
+		Sleep(5);
 	}
 
 	_isWalking = false;

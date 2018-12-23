@@ -23,6 +23,8 @@ class Item
 		int GetThreadExitStatus();
 		GAME_ITEM GetItemType();
 
+		//Note that the item class needs a FreeMemory() method, which cleans up meshes, particle systems and so on
+
 	protected:
 
 		///<summary>The InteractWithWorld function will be called as a thread. This has the advantage, that items

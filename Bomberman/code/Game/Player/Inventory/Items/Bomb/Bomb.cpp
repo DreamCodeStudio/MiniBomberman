@@ -8,6 +8,18 @@ void Bomb::Create(irr::scene::ISceneManager *manager, irr::core::vector3df playe
 	//Load 3D-mesh for the bomb model and place it on the position of the player
 	_bombMesh = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\Bomb\\Bomb.obj"), 0, -1, playerPos);		
 
+	//Create particle system for creating a "explosion effect"
+	_particleSystem = manager->addParticleSystemSceneNode(false);
+	_particleSystem->setMaterialTexture(0, manager->getVideoDriver()->getTexture("Assets\\Textures\\Fireball.bmp"));
+	_particleSystem->setMaterialType(irr::video::EMT_TRANSPARENT_ADD_COLOR);
+	_particleEmitter = _particleSystem->createBoxEmitter(irr::core::aabbox3df(playerPos.X - 1, playerPos.Y, playerPos.Z - 1,
+																			  playerPos.X + 1, playerPos.Y + 2, playerPos.Z + 1),
+														 irr::core::vector3df(0, 0, 0),//Particles will be manipulated by the affector later
+														 20, 25, irr::video::SColor(100, 230, 0, 0), irr::video::SColor(150, 255, 170, 0),
+														 100000U, 200000U, 0, irr::core::dimension2df(0.2f, 0.2f),
+														 irr::core::dimension2df(0.4f, 0.4f));
+	_particleSystem->setEmitter(_particleEmitter);
+
 	std::thread thread(&Bomb::InteractWithWorld, this, gameMatrix);
 	thread.detach();
 }
@@ -24,6 +36,12 @@ void Bomb::InteractWithWorld(Tile **gameMatrix)
 		//Wait 3 seconds before explode
 		Sleep(1000);
 	}
+
+	//Create a particle detractor to get the visual effect of an explosion
+	irr::scene::IParticleAffector *detractor = _particleSystem->createAttractionAffector(_bombMesh->getAbsolutePosition(),
+																						 10, false, true, true, true);
+	_particleSystem->addAffector(detractor);
+	_particleEmitter->setMaxParticlesPerSecond(0);
 
 	//Set default return value if nobody is blown up
 	_threadExitStatus = 0;
@@ -185,5 +203,16 @@ void Bomb::CheckForPlayerHit(Tile **gameMatrix)
 				_threadExitStatus = 2;
 			}
 		}
+	}
+
+	if (gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::PLAYER1_STANDS)
+	{
+		std::cout << "Player 1 was blown up!" << std::endl;
+		_threadExitStatus = 1;
+	}
+	if (gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::PLAYER2_STANDS)
+	{
+		std::cout << "Player 2 was blown up!" << std::endl;
+		_threadExitStatus = 2;
 	}
 }
