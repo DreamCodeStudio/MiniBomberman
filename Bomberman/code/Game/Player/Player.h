@@ -97,4 +97,5 @@ class Player
 		//If the player won the game
 		int _winLoseStatus;
 		bool _gameOver;
+		irr::scene::IAnimatedMeshSceneNode *_gameOverNode;
 };

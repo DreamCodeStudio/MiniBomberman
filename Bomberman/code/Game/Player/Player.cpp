@@ -50,10 +50,24 @@ Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::
 	//After the scaling of the player model we need to normalize it again, otherwise it will be reflecting to much light
 	_playerModel->setMaterialFlag(irr::video::EMF_NORMALIZE_NORMALS, true);	
 
+	//Load the game over mesh which can be displayed a player won. The text is depending on the instance number
+	if (_currentInstance == 1)
+	{
+		_gameOverNode = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\GameOver\\Player1Won\\Player1Won.obj"), 0, -1,
+														  irr::core::vector3df(0, 5, 0));
+	}
+	if (_currentInstance == 2)
+	{
+		_gameOverNode = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\GameOver\\Player2Won\\Player2Won.obj"), 0, -1, 
+														  irr::core::vector3df(0, 5, 0));
+	}
+	_gameOverNode->setVisible(false);		//Set visibility to false, because the game just started
+	_gameOverNode->setMaterialFlag(irr::video::EMF_LIGHTING, false);	//The node should not be affected by light, so it is easier to read
+
 	//Set start values
 	_isWalking = false;
 	_gameOver = false;	//Is set to true if the game class calls the "GameOver" method
-	_winLoseStatus = 0;
+	_winLoseStatus = 0; //Is changed if this player class won or killed itself
 	_itemCooldown = 0;
 }
 
@@ -81,6 +95,8 @@ void Player::GameOver()
 {
 	_gameOver = true; //Set game over to true, so the player does not react on inputs
 	_playerModel->setVisible(false); //If the player died -> set model invisible
+	_gameOverNode->setVisible(true); //If the player died -> set game over text visibility to true
+	_gameOverNode->setRotation(_manager->getActiveCamera()->getRotation());
 }
 
 /* ##### Private ###### */
@@ -366,7 +382,7 @@ void Player::WalkingThread(WalkingDirection direction)
 			}
 					 break;
 		}
-		Sleep(5);
+		Sleep(3);
 	}
 
 	_isWalking = false;

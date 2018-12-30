@@ -11,8 +11,6 @@ Game::Game()
 	_manager = _device->getSceneManager();
 	_gui = _manager->getGUIEnvironment();
 
-	//Create first person camera. The player can controll the camera via the LeapMotion controller
-	//Because this is kind of an ego-shooter we use a first person camera here. 
 	//_camera = _manager->addCameraSceneNodeFPS(0, 100, 0.05f);
 	_camera = _manager->addCameraSceneNode(0, irr::core::vector3df(9, 17, -10));
 	_camera->addAnimator(_manager->createFlyCircleAnimator(irr::core::vector3df(0, 14, 0), 12, 0.0001f));
