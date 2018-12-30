@@ -31,8 +31,6 @@ void Bomb::InteractWithWorld(Tile **gameMatrix)
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		//Maybe do some animation here...
-
 		//Wait 3 seconds before explode
 		Sleep(1000);
 	}

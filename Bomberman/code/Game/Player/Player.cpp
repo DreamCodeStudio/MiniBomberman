@@ -16,7 +16,7 @@ Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::
 	std::cout << "Created Player instance " << _instanceCounter << std::endl;
 
 	//Create inventory
-	_inventory = Inventory(manager, gui, _currentInstance);
+	//_inventory = Inventory(manager, gui, _currentInstance);
 
 	//!!!Note there are 4 spawn positions implemented, but player controll and inventory class will only support
 	//!!!2 player instances.
@@ -53,16 +53,17 @@ Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::
 	//Load the game over mesh which can be displayed a player won. The text is depending on the instance number
 	if (_currentInstance == 1)
 	{
-		_gameOverNode = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\GameOver\\Player1Won\\Player1Won.obj"), 0, -1,
+		_gameOverNode = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\GameOver\\Player2Won\\Player2Won.obj"), 0, -1,
 														  irr::core::vector3df(0, 5, 0));
 	}
 	if (_currentInstance == 2)
 	{
-		_gameOverNode = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\GameOver\\Player2Won\\Player2Won.obj"), 0, -1, 
+		_gameOverNode = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\GameOver\\Player1Won\\Player1Won.obj"), 0, -1, 
 														  irr::core::vector3df(0, 5, 0));
 	}
 	_gameOverNode->setVisible(false);		//Set visibility to false, because the game just started
 	_gameOverNode->setMaterialFlag(irr::video::EMF_LIGHTING, false);	//The node should not be affected by light, so it is easier to read
+	_gameOverNode->setMaterialFlag(irr::video::EMF_BACK_FACE_CULLING, false);
 
 	//Set start values
 	_isWalking = false;
@@ -199,7 +200,7 @@ bool Player::IsColliding()
 		return true;
 	}
 	else if (_gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::BLOCKED ||
-			 _gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::MARKED)
+			 _gameMatrix[zPosition][xPosition].GetTileState() == GAME_TILE_STATE::UNDESTRUCTABLE)
 	{
 		return true;
 	}

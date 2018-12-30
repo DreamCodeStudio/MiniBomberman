@@ -73,7 +73,7 @@ class Player
 		irr::scene::ISceneManager *_manager;
 
 		//Inventory class so the player can collect and use items during the game
-		Inventory _inventory;
+		//Inventory _inventory;
 
 		//Pointer to the game matrix, so the player can collect items, destroy tiles and more 
 		Tile** _gameMatrix;

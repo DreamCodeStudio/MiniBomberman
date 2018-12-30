@@ -19,7 +19,14 @@ World::World(irr::scene::ISceneManager *manager)
 	{
 		for (int x = -5; x < 5; x++)
 		{
-			_gameMatrix[y + 5][x + 5].Create(manager, irr::core::vector3df(x * 1.5f, 0, y * 1.5f), GAME_TILE_STATE::BLOCKED);
+			if (!(x % 2 && y % 2) || (x == -5 && y == -5))
+			{
+				_gameMatrix[y + 5][x + 5].Create(manager, irr::core::vector3df(x * 1.5f, 0, y * 1.5f), GAME_TILE_STATE::BLOCKED);
+			}
+			else
+			{
+				_gameMatrix[y + 5][x + 5].Create(manager, irr::core::vector3df(x * 1.5f, 0, y * 1.5f), GAME_TILE_STATE::UNDESTRUCTABLE);
+			}
 		}
 	}
 

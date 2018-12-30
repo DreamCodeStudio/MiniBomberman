@@ -12,7 +12,14 @@ void Tile::Create(irr::scene::ISceneManager *manager, irr::core::vector3df tileP
 	_currentGameTileState = tileState;
 
 	//Load tile model
-	_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\Tile\\Tile.obj")); //Load model
+	if (tileState == GAME_TILE_STATE::UNDESTRUCTABLE)
+	{
+		_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\UndestructableTile\\Tile.obj")); //Load model
+	}
+	else
+	{
+		_tileModel = _manager->addAnimatedMeshSceneNode(_manager->getMesh("Assets\\Models\\Tile\\Tile.obj")); //Load model
+	}
 	_tileModel->setPosition(_tilePosition);	//Set position
 
 	//Load the model according to the TileState
@@ -21,6 +28,12 @@ void Tile::Create(irr::scene::ISceneManager *manager, irr::core::vector3df tileP
 
 void Tile::SetTileState(GAME_TILE_STATE tileState)
 {
+	//If the current tile state is undestructable -> the tile state can not be changed or influenced in any way
+	if (_currentGameTileState == GAME_TILE_STATE::UNDESTRUCTABLE)
+	{
+		return;
+	}
+
 	switch (tileState)
 	{
 		case GAME_TILE_STATE::BLOCKED: {
