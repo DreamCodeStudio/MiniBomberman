@@ -42,6 +42,9 @@ Player::Player(irr::scene::ISceneManager *manager, Tile **gameMatrix, irr::gui::
 				break;
 	}
 
+	//For a random screen shake we need random numbers
+	srand(static_cast<unsigned int>(time(NULL)));
+
 	//Load Player model 
 	_playerModel = manager->addAnimatedMeshSceneNode(manager->getMesh("Assets\\Models\\Player\\Player.obj"), 0, -1,
 													_playerSpawnPosition, irr::core::vector3df(0, 0, 0), 
@@ -444,22 +447,108 @@ void Player::UpdateEnemyGameOver()
 			if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 1)
 			{
 				_winLoseStatus = -1;
+
+				delete _itemStorage[i];
+				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
 			}
 			//If the player killed the enemy player
-			if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 2)
+			else if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 2)
 			{
 				_winLoseStatus = 1;
+				
+				delete _itemStorage[i];
+				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
 			}
-
 			//The same as above
-			if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 2)
+			else if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 2)
 			{
 				_winLoseStatus = -1;
+				
+				delete _itemStorage[i];
+				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
 			}
-			if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 1)
+			else if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 1)
 			{
 				_winLoseStatus = 1;
+				
+				delete _itemStorage[i];
+				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
+			}
+			//If the bomb exploded and did not hit a player
+			else if (_itemStorage[i]->GetThreadExitStatus() == 3)
+			{
+				//Start a screen shake so we get a visual feedback of the explosion
+				std::thread Thread(&Player::ScreenShake, this);
+				Thread.detach();
+
+				delete _itemStorage[i];
+				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
+			}
+			//If the thread is still running...
+			else if (_itemStorage[i]->GetThreadExitStatus() == 0)
+			{
+
 			}
 		}
 	}
+}
+
+void Player::ScreenShake()
+{
+	std::cout << "Starting screen shake!" << std::endl;
+	for (unsigned int i = 0; i < 20; i++)
+	{
+		int direction = rand() % 6;
+		std::cout << direction << std::endl;
+		for (unsigned int k = 0; k < 10; k++)
+		{
+			_manager->getActiveCamera()->updateAbsolutePosition();
+			if (direction == 0)
+			{
+				_manager->getActiveCamera()->setTarget(irr::core::vector3df(_manager->getActiveCamera()->getTarget().X,
+																			_manager->getActiveCamera()->getTarget().Y + 0.02f,
+																			_manager->getActiveCamera()->getTarget().Z));
+
+			}
+			else if (direction == 1)
+			{
+				_manager->getActiveCamera()->setTarget(irr::core::vector3df(_manager->getActiveCamera()->getTarget().X,
+																			_manager->getActiveCamera()->getTarget().Y - 0.02f,
+																			_manager->getActiveCamera()->getTarget().Z));
+
+			}
+			else if (direction == 2)
+			{
+				_manager->getActiveCamera()->setTarget(irr::core::vector3df(_manager->getActiveCamera()->getTarget().X + 0.02f,
+																			_manager->getActiveCamera()->getTarget().Y,
+																			_manager->getActiveCamera()->getTarget().Z));
+
+			}
+			else if (direction == 3)
+			{
+				_manager->getActiveCamera()->setTarget(irr::core::vector3df(_manager->getActiveCamera()->getTarget().X - 0.02f,
+																			_manager->getActiveCamera()->getTarget().Y,
+																			_manager->getActiveCamera()->getTarget().Z));
+
+			}
+			else if (direction == 4)
+			{
+				_manager->getActiveCamera()->setTarget(irr::core::vector3df(_manager->getActiveCamera()->getTarget().X,
+																			_manager->getActiveCamera()->getTarget().Y,
+																			_manager->getActiveCamera()->getTarget().Z + 0.02f));
+
+			}
+			else if (direction == 5)
+			{
+				_manager->getActiveCamera()->setTarget(irr::core::vector3df(_manager->getActiveCamera()->getTarget().X,
+																			_manager->getActiveCamera()->getTarget().Y,
+																			_manager->getActiveCamera()->getTarget().Z - 0.02f));
+
+			}
+			Sleep(3);
+		}
+
+		Sleep(20);
+	}
+	_manager->getActiveCamera()->setTarget(irr::core::vector3df(0, 0, 0));
 }

@@ -28,6 +28,8 @@
 //For some calculations like rounding
 #include <cmath>
 
+//For random screen shaking
+#include <ctime>
 
 ///<summary>
 ///The player class handles all the user input and the player figure in game.
@@ -68,6 +70,9 @@ class Player
 		//Other update methods
 		void UpdatePlayerStandTile();
 		void UpdateEnemyGameOver();
+
+		//Screen shakes if the player dropped a bomb which exploded
+		void ScreenShake();
 
 		//Pointer to the scene manager so it can get passed to the create method of items for loading item meshes
 		irr::scene::ISceneManager *_manager;

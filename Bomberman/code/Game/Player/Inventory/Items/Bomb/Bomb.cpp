@@ -97,6 +97,8 @@ void Bomb::CheckForPlayerHit(Tile **gameMatrix)
 	int xPosition = static_cast<int>(round(_bombMesh->getAbsolutePosition().X / 1.5f)) + 5;
 	int zPosition = static_cast<int>(round(_bombMesh->getAbsolutePosition().Z / 1.5f)) + 5;
 
+	_threadExitStatus = 3; //Thread status should be 3 if no player was hit 
+
 	if (zPosition > 0)
 	{
 		if (gameMatrix[zPosition - 1][xPosition].GetTileState() == GAME_TILE_STATE::PLAYER1_STANDS)
