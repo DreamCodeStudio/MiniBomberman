@@ -443,40 +443,28 @@ void Player::UpdateEnemyGameOver()
 	{
 		if (_itemStorage[i]->GetItemType() == GAME_ITEM::BOMB)
 		{
-			//If the player blew up himself
-			if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 1)
+			if (_itemStorage[i]->GetThreadExitStatus() != 0) //If the bomb exploded already
 			{
-				_winLoseStatus = -1;
+				//If the player blew up himself
+				if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 1)
+				{
+					_winLoseStatus = -1;
+				}
+				//If the player killed the enemy player
+				else if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 2)
+				{
+					_winLoseStatus = 1;
+				}
+				//The same as above
+				else if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 2)
+				{
+					_winLoseStatus = -1;
+				}
+				else if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 1)
+				{
+					_winLoseStatus = 1;
+				}
 
-				delete _itemStorage[i];
-				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
-			}
-			//If the player killed the enemy player
-			else if (_currentInstance == 1 && _itemStorage[i]->GetThreadExitStatus() == 2)
-			{
-				_winLoseStatus = 1;
-				
-				delete _itemStorage[i];
-				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
-			}
-			//The same as above
-			else if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 2)
-			{
-				_winLoseStatus = -1;
-				
-				delete _itemStorage[i];
-				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
-			}
-			else if (_currentInstance == 2 && _itemStorage[i]->GetThreadExitStatus() == 1)
-			{
-				_winLoseStatus = 1;
-				
-				delete _itemStorage[i];
-				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
-			}
-			//If the bomb exploded and did not hit a player
-			else if (_itemStorage[i]->GetThreadExitStatus() == 3)
-			{
 				//Start a screen shake so we get a visual feedback of the explosion
 				std::thread Thread(&Player::ScreenShake, this);
 				Thread.detach();
@@ -484,22 +472,15 @@ void Player::UpdateEnemyGameOver()
 				delete _itemStorage[i];
 				_itemStorage.erase(_itemStorage.begin() + i, _itemStorage.begin() + i + 1);
 			}
-			//If the thread is still running...
-			else if (_itemStorage[i]->GetThreadExitStatus() == 0)
-			{
-
-			}
 		}
 	}
 }
 
 void Player::ScreenShake()
 {
-	std::cout << "Starting screen shake!" << std::endl;
-	for (unsigned int i = 0; i < 20; i++)
+	for (unsigned int i = 0; i < 15; i++)
 	{
 		int direction = rand() % 6;
-		std::cout << direction << std::endl;
 		for (unsigned int k = 0; k < 10; k++)
 		{
 			_manager->getActiveCamera()->updateAbsolutePosition();
